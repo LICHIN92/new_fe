@@ -1,0 +1,25 @@
+.common-button{
+  padding: .3rem .7rem;
+  background-color: var(--brand-darkblue);
+  color: white;
+  border: 1px thin var(--brand-meroon);
+  border-radius: 5px;
+}
+.common-button:hover{
+  background-color: var(--brand-blue);
+}
+.common-button:active{
+  transform: scale(.9);
+}
+.account{
+  font-size: .9rem;
+
+}
+.account i{
+  color:blue;
+  font-style:italic;
+}
+.account i:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}

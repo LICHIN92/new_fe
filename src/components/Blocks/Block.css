@@ -1,0 +1,15 @@
+.home-box{
+    height: 50px;
+    margin-block: 1rem;
+
+}
+.home-box p{
+    font-weight: lighter;
+}
+.home-box h3{
+    color: var(--brand-darkblue);
+}
+.search{
+    width: 40px;
+    background-color: white;
+}

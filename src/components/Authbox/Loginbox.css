@@ -1,0 +1,12 @@
+.account{
+    font-size: .9rem;
+
+}
+.account i{
+    color:blue;
+    font-style:italic;
+}
+.account i:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}

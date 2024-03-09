@@ -1,0 +1,31 @@
+.navbar-toggle:focus{
+    box-shadow: none !important;
+}
+.navbar{
+   padding: 0;
+   background-color: var(--brand-meroon) !important;
+}
+.nav-item{
+    color: var(--brand-blue);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-inline: 1rem;
+}
+.nav-item:hover{
+    background-color: var(--brand--purple);
+    color: white;
+    border-bottom: 2px solid white;
+    cursor: pointer;
+}
+.navbar-collapse li{
+    height: 40px;
+}
+.navbar-brand{
+    color: var(--brand-darkblue);
+    font-style: oblique;
+    font-variant: small-caps;
+}
+.navbar-brand img{
+    height: 20px;
+}
