@@ -15,6 +15,7 @@ function LoginBox({setBoxtype}) {
         .then((res)=>{
       successToast(res.message)
       localStorage.setItem('token',res.data.token)
+      localStorage.setItem("user", JSON.stringify(res.data.userdata));
       navigate('/home')
     }).catch((err)=>{
       console.log(err);

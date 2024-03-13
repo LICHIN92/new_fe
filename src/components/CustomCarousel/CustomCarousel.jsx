@@ -4,7 +4,7 @@ import crickball from '@Assets/cricketBall.avif'
 import criccket from '@Assets/photo-1562077772-3bd90403f7f0.avif'
 function CustomCarousel() {
     return (
-        <div id="carouselExampleCaptions" className="carousel slide carousel-container" data-bs-ride="carousel">
+        <div id="carouselExampleCaptions" className="carousel slide carousel-container " data-bs-ride="carousel">
             <div className="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>

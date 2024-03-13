@@ -6,7 +6,7 @@ import SignuoBox from '../../components/Authbox/SignuoBox'
 function AuthPage() {
     const [Boxtype, setBoxtype] = useState('login')
     return (
-        <div className='container-fluid d-flex flex-row justify-content-center align-items-center vh-100 vw-100'>
+        <div className='container-fluid d-flex flex-row justify-content-center align-items-center vh-100 vw-100 authpage'>
             <div className='row '>
                 <div className=' col-sm-12 col-md-6 left-image p-2' style={{ backgroundImage: `url(${footbalG})` }}>
                     <p className='my-2'>Reserve your spot, create memories, and let the games begin!</p>

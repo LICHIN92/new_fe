@@ -5,8 +5,8 @@ import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { ErrorToast, successToast } from './Plugins/Toast/Toast';
 function App() {
-  successToast('hi hello')
-  ErrorToast('error message')
+  // successToast('hi hello')
+  // ErrorToast('error message')
   return (
     <>
     <ToastContainer/>

@@ -1,6 +1,10 @@
 import React from 'react'
 import './CusNavBar.css'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 function CusNavBar() {
+  const navigate=useNavigate()
+  const {user} =useSelector(state=>state.user)
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light pe-3">
     <div className="container-fluid">
@@ -10,11 +14,14 @@ function CusNavBar() {
       </button>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav me-auto mb-lg-0">
-          <li className="nav-item">
+          <li className="nav-item" onClick={()=>navigate('/home')}>
           Home
           </li>
-          <li className="nav-item">
-            Features
+          {user.role===1 && <li className="nav-item" onClick={()=>navigate('/newcourt')}>
+            Add Court
+          </li>}
+          <li className="nav-item" onClick={()=>navigate('/courts/courtlist')}>
+          Courts
           </li>
          
           {/* <li className="nav-item">
@@ -26,8 +33,8 @@ function CusNavBar() {
           <button className="btn btn-outline-success" type="submit">Search</button>
         </form> */}
          <span className="nav-item dropdown me-5 dropdown-menu-end">
-            <a className="nav-link dropdown-toggle"  id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              User Details
+            <a className="nav-link dropdown-toggle text-uppercase"  id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {user.firstName+" "+user.lastName}
             </a>
             <ul className="dropdown-menu me-5" aria-labelledby="navbarDropdown">
               <li><a className="dropdown-item me-4" >Action</a></li>

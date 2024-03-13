@@ -1,4 +1,4 @@
-.row {
+.authpage .row {
     width: 900px;
     min-height: 450px;
     border-radius: 10px;
@@ -31,7 +31,7 @@
 @media(max-width:768px) {
 
    
-    .row{
+   .authpage .row{
         height: 100vh;
         width: 100vw;
     }

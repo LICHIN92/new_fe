@@ -41,10 +41,11 @@ function SignuoBox({ setBoxtype }) {
     if(signupData.password===signupData.confirmpassword){
       axios.post('http://localhost:5000/auth/dosignup',signupData)
       .then((resp)=>{
-        alert('ok')
+        successToast(resp.message)
         setBoxtype('login')
       }).catch((err)=>{
-        alert(err)
+        // console.log(err);
+        ErrorToast(err?.response?.data.message || 'something went wrong')
       })
     }
   }
