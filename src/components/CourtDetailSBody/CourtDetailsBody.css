@@ -1,0 +1,125 @@
+.details-page {
+    height: calc(100vh - 50px);
+    /* height: 100vh; */
+}
+
+.details-image-box {
+    position: relative;
+    height:100%;
+}
+
+.details-main-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.details-image-content {
+    position: absolute;
+    height: 16rem;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 15%, rgba(0, 0, 0, .01) 92%);
+    width: 100%;
+    inset: auto auto 0rem auto;
+    z-index: 2;
+}
+
+.details-image-content button {
+    background: transparent;
+    border-radius: 5px;
+    border: 1px solid white;
+    color: white;
+    padding: .3rem 1rem;
+}
+
+.details-image-content button:active {
+    transform: scale(.99);
+    background-color: var(--brand-green);
+}
+
+.calender-box {
+    position: fixed;
+    z-index: 1030;
+    background-color: white;
+    top: 30px;
+    
+}
+
+.modal-close-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    background-color: black;
+    border-radius: 50%;
+    z-index: 5;
+
+}
+
+.range-label {
+    font-size: smaller;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .3rem .7rem;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 1rem;
+    border: 1px solid #9e9e9e;
+}
+
+.time-slot-select-modal {
+    width: 30rem;
+}
+
+.slot-list {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 2rem;
+    background-color: rgb(255, 255, 255);
+    height: 10rem;
+    border-radius: 10px;
+    border: 1px solid #9e9e9e;
+    padding: 0;
+    overflow-y: auto;
+}
+.calender{
+    cursor: pointer;
+    /* height: 20px; */
+}
+.calender:hover{
+  height: 25px;
+  background-color: rgb(126, 122, 122);
+}
+.slot-list li {
+    padding: .5rem 1rem;
+    border-bottom: 1px solid #9e9e9e;
+    list-style: none;
+    width: 100%;
+    overflow-y: auto;
+    font-size: small;
+}
+
+.availbleslots {
+    border: 1px solid var(--brand-green);
+    border-radius: 5px;
+    color: var(--brand-dark);
+    background-color: rgba(129, 202, 129, 0.7);
+    cursor: pointer;
+}
+
+.notavaialable {
+    border: 1px solid rgb(184, 184, 184);
+    border-radius: 5px;
+    color: rgb(184, 184, 184);
+    background-color: rgb(184, 184, 184, .2);
+    cursor: not-allowed;
+} 
+.calender-box {
+    position: absolute; /* Change position to absolute */
+    z-index: 15; /* Increase z-index to ensure it's above the modal */
+    background-color: white;
+    top: 50%; /* Adjust position as needed */
+    left: 50%; /* Adjust position as needed */
+    transform: translate(-50%, -50%); /* Center the calendar box */
+}

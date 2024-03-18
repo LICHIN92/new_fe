@@ -1,0 +1,48 @@
+
+.modal-container {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(0, 0, 0, .7);
+    top: 0;
+    z-index: 10;
+}
+
+.modal-box {
+    max-width: 80%;
+    max-height: 80%;
+    min-height: 40%;
+    border-radius: 10px;
+    position: relative;
+    background-color: white;
+}
+
+.modal-heading {
+    height: 40px;
+    background-color: var(--brand-green);
+    color: white;
+    background-color: rgb(4, 66, 4);
+    border-radius: 10px 10px 0 0;
+    padding-inline: 2rem;
+    text-align: start;
+    display: flex;
+    align-items: center;
+}
+
+.modal-close-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    background-color: black;
+    border-radius: 50%;
+    z-index: 5;
+    cursor: pointer;
+}
+
+.calnder-box {
+    position: fixed;
+    z-index: 1030;
+    background-color: white;
+    top: 30px;
+}
