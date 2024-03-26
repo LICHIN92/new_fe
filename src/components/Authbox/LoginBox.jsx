@@ -19,7 +19,8 @@ function LoginBox({setBoxtype}) {
       navigate('/home')
     }).catch((err)=>{
       console.log(err);
-      ErrorToast(err.response.data.message || 'something went wrong')
+      debugger
+      ErrorToast(err?.response?.data?.message || 'something went wrong')
     })
   }
   return (

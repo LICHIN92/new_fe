@@ -32,7 +32,8 @@ function AddnewCourtBox() {
         setCourtdata({ ...Courtdata, description: data })
     }
     const handleAddNewCourt = () => {
-        let { name, location, type, addressline1, addressline2, addressline3, landmark, pin, contactnumber } = Courtdata
+        console.log(Courtdata);
+        let { name, location, type, addressline1, addressline2, addressline3, landmark, pin, contactNumber } = Courtdata
         let lettervalid = /^[a-z.0-9 ]+$/i;
         let pincodevalid=/^[0-9]{6}$/;
         let mobile=/^[0-9]{10}$/
@@ -102,14 +103,17 @@ function AddnewCourtBox() {
         }
       }
       function mobilevalid(){
-        if(contactnumber){
-            if(mobile.test(contactnumber)){
+        console.log(contactNumber);
+        if(contactNumber){
+            if(contactNumber.length==10){
                 return true
             }
         alert('please enter a proper Contact Number')
 
-        }
+        }else{
         alert('please enter a  Contact Number')
+
+        }
       }
         if (namevalid() && typevalid() && locationvalid() && addressline1valid && addressline2valid() && addressline3valid() && landmarkvalid() && pinvalid() && mobilevalid()) {
             const formDatatoSend = new FormData();

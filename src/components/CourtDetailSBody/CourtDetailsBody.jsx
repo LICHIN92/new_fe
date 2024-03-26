@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './CourtDetailsBody.css'
 import img from '@Assets/football-ground.avif'
 import edit from '@Assets/edit.svg'
@@ -15,30 +15,143 @@ import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRange } from 'react-date-range'
 import Custominput from '../Common/Custom/Custominput'
+import { useParams } from 'react-router-dom'
+import AxiosInstance from '../../config/apicall'
+import { TIMINGS } from '../../Constants/constant'
+import { ErrorToast, successToast } from '../../Plugins/Toast/Toast'
+import { useDispatch } from 'react-redux'
+import { showorhideLoader } from '../../redux/GeneralSlice'
 
 function CourtDetailsBody() {
+    const { id } = useParams()
+    // console.log(id);
     const [opentimeslot, setTimeslot] = useState(false)
-    const [DateRangestate, setDateRangestate] = useState([
-        {
-            startDate: new Date(),
-            endDate: null,
-            key: 'selection'
-        }
-    ]);
+    const [DateRangestate, setDateRangestate] = useState({
+        // startDate: new Date(),//It will select today's date
+        startDate: null,
+        endDate: null,
+        key: 'selection'
+    });
     const [calenderOpen, setCalenderOpen] = useState(false)
-    const [opendd,setOpendd]=useState(false)
-    const closeListfn=(e)=>{
+    const [opendd, setOpendd] = useState(false)
+    const [SingleCourtdata, setCourtData] = useState({})
+    const [selectedSlots, setSelectedSlots] = useState([])
+    const [fiteredTimings, setfilteredTimings] = useState(TIMINGS) //To avoid selecting the selected time slot again
+    const [cost, setCost] = useState('')
+    const dispatch=useDispatch()
+    useEffect(() => {
+        getSingleCourtdata()
+    }, [])
+
+    const getSingleCourtdata = () => {
+        // AxiosInstance.get('/users/getsinglecourtdata',{params:{courtId:id}})
+        AxiosInstance({
+            url: 'http://localhost:5000/users/getsinglecourtdata',
+            method: 'get',
+            params: { courtId: id } // Correctly pass courtId as a query parameter
+        }).then((resp) => {
+            setCourtData(resp.data[0])
+            console.log(resp.data);
+        }).catch((error) => {
+            console.log(error);
+            console.error('Error fetching single court data:', error);
+        });
+    };
+
+    const selectSlot = (e, slot) => {
         e.stopPropagation()
+        setSelectedSlots([...selectedSlots, slot])
         setOpendd(false)
+        const newfilter = fiteredTimings.filter((time) => time.id !== slot.id)
+        setfilteredTimings(newfilter)
     }
+    useEffect(() => {    // useEffect is used to log DateRanges 
+        // console.log(DateRangestate);
+    }, [DateRangestate]);
+    
+    // const createCourtShedules = () => {
+    //     console.log(selectedSlots.length);
+    //     console.log(DateRangestate.startDate);
+    //     let dateStart=DateRangestate.startDate?.getTime()
+    //     let dateEnd=DateRangestate.endDate?.getTime()
+    //     console.log(dateStart);
+    //     console.log(dateStart >= Date.now());
+    //    console.log(  DateRangestate.endDate?.getTime()>=Date.now());
+    // if (dateStart >= Date.now() && dateEnd >= Date.now() && selectedSlots.length > 0)
+    //    {
+    //     dispatch(showorhideLoader(true))
+    //     AxiosInstance({
+    //         url: 'http://localhost:5000/admin/createshedule',
+    //         method: 'post',
+    //         data: {
+    //             startDate: DateRangestate.startDate,
+    //             endDate: DateRangestate.endDate,
+    //             cost: cost,
+    //             selectedSlots: selectedSlots,
+    //             courtId: id
+    //         }
+    //     })
+    //     .then(res => {
+    //         successToast('court created successfully')
+    //         dispatch(showorhideLoader(false))
+    //         opentimeslot(false)
+    //     }).catch((err) => {
+    //         console.log(err);
+    //         // debugger
+    //         // ErrorToast('court retion failed')
+    //         ErrorToast(err?.response?.data.message)
+    //     })
+    //    }else{
+    //     alert('please select date and slots')
+    //    }
+        
+       
+    // }
+    
+    const createCourtShedules = () => {
+        console.log(selectedSlots.length);
+        console.log(DateRangestate.startDate);
+        let dateStart = DateRangestate.startDate?.getTime();
+        let dateEnd = DateRangestate.endDate?.getTime();
+        console.log(dateStart);
+        console.log(dateStart >= Date.now());
+        console.log(dateEnd >= Date.now());
+        if (dateStart && dateEnd && dateStart >= Date.now() && dateEnd >= Date.now() && selectedSlots.length > 0) {
+            dispatch(showorhideLoader(true))
+            AxiosInstance({
+                url: 'http://localhost:5000/admin/createshedule',
+                method: 'post',
+                data: {
+                    startDate: DateRangestate.startDate,
+                    endDate: DateRangestate.endDate,
+                    cost: cost,
+                    selectedSlots: selectedSlots,
+                    courtId: id
+                }
+            })
+                .then(res => {
+                    successToast('court created successfully')
+                    dispatch(showorhideLoader(false))
+                    setTimeslot(false)
+                }).catch((err) => {
+                    console.log(err);
+                    // debugger
+                    // ErrorToast('court retion failed')
+                    ErrorToast(err?.response?.data.message)
+                })
+        } else {
+            alert('please select date and slots')
+        }
+    }
+    
     return (
         <div className='details-page'>
             <div className='details-image-box'>
                 <img className='details-main-img' src={img} alt="" />
                 <div className='details-image-content d-flex justify-content-between p-4'>
                     <div className="d-flex flex-column justify-content-center text-white">
-                        <h3>court name</h3>
-                        <p>location</p>
+                        <h3>{SingleCourtdata.name}</h3>
+                        <p>{SingleCourtdata.location}</p>
                     </div>
                     <div className='align-self-end d-flex gap-3'>
                         <button >book</button>
@@ -59,7 +172,7 @@ function CourtDetailsBody() {
             </div>
             <ReactQuill readOnly={true} theme="bubble"
                 className="" style={{ height: '150px' }}
-                value={"jhjbbk"}
+                value={SingleCourtdata.description}
             />
             {opentimeslot && (
                 <Modal
@@ -70,9 +183,14 @@ function CourtDetailsBody() {
                             <img src={calender} className='mx-2 calender' alt="" height={'20px'} onClick={() => setCalenderOpen(true)} />
                         </label>
                         <div className=' d-flex gap-2 align-items-center mt-3'> {/* for displaying selectedd ate */}
-                            <div className='timeslot-date flex-grow-1 border border-1 rounded-1 p-2'>Date</div>
+                            <div className='timeslot-date flex-grow-1 border border-1 rounded-1 p-2'>
+                                {/* Date */}
+                                {new Date(DateRangestate.startDate).toLocaleDateString()}
+                            </div>
                             <img src={forword_icon} alt="" height={'20px'} />
-                            <div className='timeslot-date flex-grow-1 border border-1 rounded-1 p-2'>Date</div>
+                            <div className='timeslot-date flex-grow-1 border border-1 rounded-1 p-2'>
+                                {new Date(DateRangestate.endDate).toLocaleDateString()}
+                            </div>
                         </div>
                         {calenderOpen && (
                             <div className='calender-box'>
@@ -87,25 +205,27 @@ function CourtDetailsBody() {
 
                                 <div className=' d-flex justify-content-end gap-3 mt-2'>
                                     <button className='common-button bg-black text-white'>Cancel</button>
-                                    <button className='common-button'>Select</button>
+                                    <button className='common-button' onClick={() => setCalenderOpen(false)}>Select</button>
                                 </div>
                             </div>)}
                         <div className='mt-2'>
-                            <Custominput name={'cost'} label={'Cost'} value={''} />
+                            <Custominput name={'cost'} label={'Cost'} value={cost} onchange={(e) => setCost(e.target.value)} />
                         </div>
-                        <div className='range-label position-relative mt-3' onClick={()=>setOpendd(true)}>
+                        <div className='range-label position-relative mt-3' onClick={() => setOpendd(true)}>
                             Select Slots
-                          { opendd && <ul className='slot-list'>
-                                <li onClick={closeListfn}>nbjbj</li>
-                                <li>nbjbj</li>
-                                <li>nbjbj</li>
-                                <li>nbjbj</li>
-                                <li>nbjbj</li>
+                            {opendd && <ul className='slot-list'>
+                                {/* {TIMINGS.map((slot) => <li onClick={(e) => selectSlot(e, slot)}>{slot.name}</li>)} */}
+                                {fiteredTimings.map((slot) => <li onClick={(e) => selectSlot(e, slot)}>{slot.name}</li>)}
+
                             </ul>}
+                        </div>
+
+                        <div className='d-flex flex-wrap gap-2 mt-1 py-2' >
+                            {selectedSlots.map(slot => <span className='border border-1 rounded-2 px-2 py-1 '> {slot.name}</span>)}
                         </div>
                         <div className=' d-flex justify-content-end mt-3 gap-3 py-2'>
                             <button className='common-button bg-black text-white'>Cancel</button>
-                            <button className='common-button'>Create</button>
+                            <button className='common-button' onClick={createCourtShedules}>Create</button>
                         </div>
                     </div>
                 </Modal>)}

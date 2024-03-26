@@ -16,7 +16,7 @@ function Routing() {
 
       <Route path='/courts'>
         <Route path='courtlist' element={<CourtList />} />
-        <Route path='courtsdetails' element={<CourtsDetails/>} />
+        <Route path='courtsdetails/:id' element={<CourtsDetails/>} />
       </Route>
       <Route path='/Newcourt' element={<Newcourt />} />
 
