@@ -125,3 +125,19 @@
     left: 50%; /* Adjust position as needed */
     transform: translate(-50%, -50%); /* Center the calendar box */
 }
+.availbleslots{
+    border: 1px solid var(--brand-green);
+    border-radius: 5px;
+    color: var(--brand-dark);
+    background-color: rgb(73, 192, 73);
+    cursor: pointer;
+}
+
+.notavailable{
+    border: 1px solid rgb(184,184,184);
+    border-radius: 5px;
+    color: rgb(184,184,184);
+    background-color: rgb(184,184,184,.2);
+    cursor: not-allowed;
+    /* cursor: pointer; */
+}

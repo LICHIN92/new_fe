@@ -38,10 +38,44 @@ function CourtDetailsBody() {
     const [selectedSlots, setSelectedSlots] = useState([])
     const [fiteredTimings, setfilteredTimings] = useState(TIMINGS) //To avoid selecting the selected time slot again
     const [cost, setCost] = useState('')
-    const dispatch=useDispatch()
+    const [bookingModal, setBookingModal] = useState(false)
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().substr(0, 10)) //yy-mm-dd
+    const [slotdata, setSlotsdata] = useState([])
+    const [bookedSlots, setBookedSlots] = useState([])
+    const dispatch = useDispatch()
+
     useEffect(() => {
         getSingleCourtdata()
     }, [])
+
+    useEffect(() => {
+        getslotsdata()
+        console.log(slotdata);
+    }, [selectedDate])
+
+    useEffect(() => {    // useEffect is used to log DateRanges 
+        // console.log(DateRangestate);
+    }, [DateRangestate]);
+
+    const getslotsdata = () => {
+        AxiosInstance({
+            url: 'http://localhost:5000/users/getslotsdata',
+            method: 'get',
+            params: {
+                courtId: id,
+                date: selectedDate
+            }
+        }).then(res => {
+            // debugger
+            console.log('slotdata');
+            setSlotsdata(res.data)
+            console.log(res);
+        }).catch(err => {
+            console.log('error');
+            console.log(err);
+            ErrorToast('something went wrong getslotdata')
+        })
+    }
 
     const getSingleCourtdata = () => {
         // AxiosInstance.get('/users/getsinglecourtdata',{params:{courtId:id}})
@@ -51,7 +85,7 @@ function CourtDetailsBody() {
             params: { courtId: id } // Correctly pass courtId as a query parameter
         }).then((resp) => {
             setCourtData(resp.data[0])
-            console.log(resp.data);
+            // console.log(resp.data);
         }).catch((error) => {
             console.log(error);
             console.error('Error fetching single court data:', error);
@@ -65,85 +99,131 @@ function CourtDetailsBody() {
         const newfilter = fiteredTimings.filter((time) => time.id !== slot.id)
         setfilteredTimings(newfilter)
     }
-    useEffect(() => {    // useEffect is used to log DateRanges 
-        // console.log(DateRangestate);
-    }, [DateRangestate]);
-    
-    // const createCourtShedules = () => {
-    //     console.log(selectedSlots.length);
-    //     console.log(DateRangestate.startDate);
-    //     let dateStart=DateRangestate.startDate?.getTime()
-    //     let dateEnd=DateRangestate.endDate?.getTime()
-    //     console.log(dateStart);
-    //     console.log(dateStart >= Date.now());
-    //    console.log(  DateRangestate.endDate?.getTime()>=Date.now());
-    // if (dateStart >= Date.now() && dateEnd >= Date.now() && selectedSlots.length > 0)
-    //    {
-    //     dispatch(showorhideLoader(true))
-    //     AxiosInstance({
-    //         url: 'http://localhost:5000/admin/createshedule',
-    //         method: 'post',
-    //         data: {
-    //             startDate: DateRangestate.startDate,
-    //             endDate: DateRangestate.endDate,
-    //             cost: cost,
-    //             selectedSlots: selectedSlots,
-    //             courtId: id
-    //         }
-    //     })
-    //     .then(res => {
-    //         successToast('court created successfully')
-    //         dispatch(showorhideLoader(false))
-    //         opentimeslot(false)
-    //     }).catch((err) => {
-    //         console.log(err);
-    //         // debugger
-    //         // ErrorToast('court retion failed')
-    //         ErrorToast(err?.response?.data.message)
-    //     })
-    //    }else{
-    //     alert('please select date and slots')
-    //    }
-        
-       
-    // }
-    
+
     const createCourtShedules = () => {
-        console.log(selectedSlots.length);
-        console.log(DateRangestate.startDate);
-        let dateStart = DateRangestate.startDate?.getTime();
-        let dateEnd = DateRangestate.endDate?.getTime();
-        console.log(dateStart);
-        console.log(dateStart >= Date.now());
-        console.log(dateEnd >= Date.now());
-        if (dateStart && dateEnd && dateStart >= Date.now() && dateEnd >= Date.now() && selectedSlots.length > 0) {
-            dispatch(showorhideLoader(true))
-            AxiosInstance({
-                url: 'http://localhost:5000/admin/createshedule',
-                method: 'post',
-                data: {
-                    startDate: DateRangestate.startDate,
-                    endDate: DateRangestate.endDate,
-                    cost: cost,
-                    selectedSlots: selectedSlots,
-                    courtId: id
-                }
+        dispatch(showorhideLoader(true))
+        AxiosInstance({
+            url: 'http://localhost:5000/admin/createshedule',
+            method: 'post',
+            data: {
+                startDate: DateRangestate.startDate,
+                endDate: DateRangestate.endDate,
+                cost: cost,
+                selectedSlots: selectedSlots,
+                courtId: id
+            }
+        })
+            .then(res => {
+                successToast('court created successfully')
+                dispatch(showorhideLoader(false))
+                setTimeslot(false)
+            }).catch((err) => {
+                console.log(err);
+                // debugger
+                // ErrorToast('court retion failed')
+                ErrorToast(err?.response?.data.message)
             })
-                .then(res => {
-                    successToast('court created successfully')
-                    dispatch(showorhideLoader(false))
-                    setTimeslot(false)
-                }).catch((err) => {
-                    console.log(err);
-                    // debugger
-                    // ErrorToast('court retion failed')
-                    ErrorToast(err?.response?.data.message)
-                })
+    }
+    const setorDeselectSots = (slot) => {
+        if (bookedSlots.find((ele) => ele._id === slot._id)) {
+            const temp = bookedSlots.filter((ele) => ele._id !== slot._id)
+            setBookedSlots(temp)
+            console.log(bookedSlots);
+            console.log(slot);
         } else {
-            alert('please select date and slots')
+            setBookedSlots([...bookedSlots, slot])
         }
     }
-    
+
+    function loadScript(src) {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = src;
+            script.onload = () => {
+                resolve(true);
+            };
+            script.onerror = () => {
+                resolve(false);
+            };
+            document.body.appendChild(script);
+        })
+    }
+    async function initiateBooking() {
+        const res = await loadScript(
+            "https://checkout.razorpay.com/v1/checkout.js"
+        );
+
+        if (!res) {
+            ErrorToast("Razorpay SDK failed to load. Are you online?");
+            return;
+        }
+        const slotIds = bookedSlots.map((ele) => { return ele._id })
+        // creating a new order
+
+        const result = await AxiosInstance({
+            url: "http://localhost:5000/payments/orders",
+            method: 'post',
+            data: { courtId: id, slotIds: slotIds }
+        });
+
+
+        if (!result) {
+            alert("Server error. Are you online?");
+            return;
+        }
+
+        // Getting the order details back
+        const { amount, id: order_id, currency, receipt } = result.data;
+
+        const options = {
+            key: process.env.nREACT_APP_RP_KEY_ID, // Enter the Key ID generated from the Dashboard
+            amount: amount.toString(),
+            currency: currency,
+            name: "Green-grid Pvt.Ltd",
+            description: "Booking Payment",
+            // image: { logo },
+            order_id: order_id,
+            handler: async function (response) {
+                const data = { //these datas are sending to BE when seccess
+                    orderCreationId: order_id,
+                    razorpayPaymentId: response.razorpay_payment_id,
+                    razorpayOrderId: response.razorpay_order_id,
+                    razorpaySignature: response.razorpay_signature,
+                    receipt,
+                    slotIds,
+                    courtId: id,
+                    date: selectedDate
+                };
+
+                const result = await AxiosInstance({
+                    url: "http://localhost:5000/payments/verify",
+                    method: 'post',
+                    data: data
+                });
+                setBookingModal(false)
+                getslotsdata()
+                successToast(result.data.msg);
+            },
+            prefill: {
+                name: "Soumya Dey",
+                email: "SoumyaDey@example.com",
+                contact: "9999999999",
+            },
+            notes: {
+                address: "Soumya Dey Corporate Office",
+            },
+            theme: {
+                color: "#61dafb",
+            },
+        };
+
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+    }
+
+
+
+
     return (
         <div className='details-page'>
             <div className='details-image-box'>
@@ -154,7 +234,7 @@ function CourtDetailsBody() {
                         <p>{SingleCourtdata.location}</p>
                     </div>
                     <div className='align-self-end d-flex gap-3'>
-                        <button >book</button>
+                        <button onClick={() => setBookingModal(true)}>book</button>
                         <button>
                             <img src={edit} alt="" height={'20px'} />
                         </button>
@@ -229,6 +309,40 @@ function CourtDetailsBody() {
                         </div>
                     </div>
                 </Modal>)}
+
+            {bookingModal && <Modal
+                heading={'Booking slots'}
+                closeModal={() => setBookingModal(false)}>
+                <div className='p-3  h-100 d-flex flex-column'>
+                    <label htmlFor="">Start Date</label>
+                    <input type="date" className='p-1 px-2 border rounded'
+                        value={selectedDate}
+                        min={new Date().toISOString().substr(0, 10)}
+                        onChange={(e) => setSelectedDate(e.target.value)} />
+                </div>
+                <label htmlFor="">Available Slots</label>
+                <div className="d-flex flex-wrap gap-2 mt-1">
+                    {slotdata.map((slot) =>
+                        <span
+                            className={`${bookedSlots.find(ele => ele._id === slot._id)
+                                    ? "bg-info-subtle"
+                                    : slot.slot.bookedBy
+                                        ? 'notavailable'
+                                        : "availbleslots"
+                                } px-2 py-1 mt-2`}
+                            onClick={() => !slot.bookedBy && setorDeselectSots(slot)}
+                        >
+                            {slot.slot.name}
+
+                        </span>
+                    )}
+
+                </div>
+                <div className=' d-flex justify-content-end gap-3 mt-2 py-2'>
+                    <button className='common-button bg-black text-white'>Cancel</button>
+                    <button className='common-button me-3' onClick={initiateBooking}>Book</button>
+                </div>
+            </Modal>}
         </div>
     )
 }
